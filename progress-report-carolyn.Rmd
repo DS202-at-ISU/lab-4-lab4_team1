@@ -9,20 +9,27 @@ output: html_document
 
 ```{r}
 library(rvest)
-url <- "https://www.baseball-almanac.com/hof/hofmem3.shtml"
+library(tidyverse)
+url <- "https://www.baseball-reference.com/bullpen/2023_Hall_of_Fame_Election"
 html <- read_html(url)
 html
+
 ```
 
 
-***Next I converted to a table and fixed the column names and made the % variable a double.***
+***Next I used the SelectorGadget to extract the statistics needed for my dataset and then cleaned everything up.***
 
 ```{r}
-tables <- html %>% html_table(fill=TRUE)
-write.csv(tables[[1]], "temp.csv", row.names=FALSE)
-backin <- readr::read_csv("temp.csv", skip = 2, show_col_types =FALSE)
-backin$`%` <- parse_number(backin$`%`)
-head(backin)
+table_col_names <- html %>% html_elements("th") %>% html_text()
+stats <- html %>% html_elements("td") %>% html_text()
+stats <- matrix(stats, nrow = 5)
+# fix rows to be columns
+# reduce to 5 columns
+
+
+stats <- as.data.frame(stats)
+colnames(stats) <- table_col_names
+stats
 ```
 
 
