@@ -1,0 +1,19 @@
+---
+title: "Progress Report"
+author: "Carolyn Jones"
+date: "2024-4-17"
+output: html_document
+---
+
+```{r}
+library(rvest)
+url <- "https://www.baseball-almanac.com/hof/hofmem3.shtml"
+html <- read_html(url)
+html
+```
+
+
+```{r}
+tables <- html %>% html_table(fill=TRUE)
+tables
+```
