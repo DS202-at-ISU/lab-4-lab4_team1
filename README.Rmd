@@ -29,3 +29,12 @@ hof %>%
   xlim(c(2000, 2022)) +
   ylab("Percent of votes")
 ```
+
+
+```{r}
+library(rvest)
+url <- "https://www.baseball-almanac.com/hof/hofmem3.shtml"
+html <- read_html(url)
+html
+```
+
