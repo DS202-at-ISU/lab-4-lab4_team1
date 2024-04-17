@@ -1,0 +1,39 @@
+---
+title: "Progress Report"
+author: "Heike Hofmann"
+date: "2022-11-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Luke Richard
+
+
+```{r}
+library(tidyverse)
+library(rvest)
+
+# suitable websites include Wikipeida and Baseball Reference, linked below
+# https://en.wikipedia.org/wiki/2023_Baseball_Hall_of_Fame_balloting
+# https://www.baseball-reference.com/awards/hof_2023.shtml
+
+url <- "https://en.wikipedia.org/wiki/2023_Baseball_Hall_of_Fame_balloting"
+html <- read_html(url)
+html
+
+tables <- html %>% html_table(fill=TRUE)
+tables %>% str()
+
+HoF23 <- tables[[3]]  # candidates on the BBWAA Ballot
+
+HoF23 %>% head()
+
+library(Lahman)
+HallOfFame %>% head()
+
+
+
+```
