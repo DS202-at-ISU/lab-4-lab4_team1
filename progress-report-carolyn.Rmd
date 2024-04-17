@@ -5,6 +5,8 @@ date: "2024-4-17"
 output: html_document
 ---
 
+***I first imported the website Baseball Almanac's data.***
+
 ```{r}
 library(rvest)
 url <- "https://www.baseball-almanac.com/hof/hofmem3.shtml"
@@ -13,7 +15,11 @@ html
 ```
 
 
+***Next I converted to a table and fixed the column names***
+
 ```{r}
 tables <- html %>% html_table(fill=TRUE)
-tables
+write.csv(tables[[1]], "temp.csv", row.names=FALSE)
+backin <- readr::read_csv("temp.csv", skip = 2, show_col_types =FALSE)
+head(backin, 3)
 ```
