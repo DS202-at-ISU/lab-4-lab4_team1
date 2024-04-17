@@ -31,10 +31,3 @@ hof %>%
 ```
 
 
-```{r}
-library(rvest)
-url <- "https://www.baseball-almanac.com/hof/hofmem3.shtml"
-html <- read_html(url)
-html
-```
-
