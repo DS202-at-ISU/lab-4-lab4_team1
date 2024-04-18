@@ -1,0 +1,40 @@
+---
+title: "Progress Report"
+author: "Carolyn Jones"
+date: "2024-4-17"
+output: html_document
+---
+
+***I first imported the website Baseball Almanac's data.***
+
+```{r}
+library(rvest)
+library(tidyverse)
+url <- "https://www.baseball-reference.com/bullpen/2023_Hall_of_Fame_Election"
+html <- read_html(url)
+html
+
+```
+
+
+***Next I used the SelectorGadget to extract the statistics needed for my dataset and then cleaned everything up.***
+
+```{r}
+table_col_names <- html %>% html_elements("th") %>% html_text()
+stats <- html %>% html_elements("td") %>% html_text()
+stats <- matrix(stats, nrow = 5)
+# fix rows to be columns
+# reduce to 5 columns
+
+
+stats <- as.data.frame(stats)
+colnames(stats) <- table_col_names
+stats
+```
+
+
+```{r}
+library(Lahman)
+head(HallOfFame)
+```
+
