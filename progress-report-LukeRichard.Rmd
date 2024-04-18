@@ -27,13 +27,25 @@ html
 tables <- html %>% html_table(fill=TRUE)
 tables %>% str()
 
-HoF23 <- tables[[3]]  # candidates on the BBWAA Ballot
+hof23 <- tables[[3]]  # candidates on the BBWAA Ballot
 
-HoF23 %>% head()
+hof23 %>% head()
+
+hof23 <- hof23 %>% mutate(ballots = 389)
+hof23 <- hof23 %>% mutate(needed = 292)
+hof23 <- hof23 %>% rename(votes = Votes)
+hof23 <- hof23 %>% mutate(yearID = 2023)
+hof23 <- hof23 %>% rename(playerID = Player)
+
+hof23 <- hof23 %>% mutate(inducted = case_when(votes >= needed ~ 'Y',
+  votes < ballots ~ 'N'))
+
+hof23 %>% head()
 
 library(Lahman)
 HallOfFame %>% head()
 
+full_join(HallOfFame, hof23, by = "playerID")
 
-
+HallOfFame
 ```
