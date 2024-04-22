@@ -1,11 +1,10 @@
----
 title: "Progress Report"
 author: "Carolyn Jones"
 date: "2024-4-17"
 output: html_document
 ---
 
-***I first imported the website Baseball Almanac's data.***
+***I first imported 2023 Hall of Fame election data from Baseball Reference.***
 
 ```{r}
 library(rvest)
@@ -13,23 +12,34 @@ library(tidyverse)
 url <- "https://www.baseball-reference.com/bullpen/2023_Hall_of_Fame_Election"
 html <- read_html(url)
 html
-
 ```
 
 
 ***Next I used the SelectorGadget to extract the statistics needed for my dataset and then cleaned everything up.***
 
 ```{r}
-table_col_names <- html %>% html_elements("th") %>% html_text()
-stats <- html %>% html_elements("td") %>% html_text()
-stats <- matrix(stats, nrow = 5)
-# fix rows to be columns
-# reduce to 5 columns
+# Get data column names and stats
+table_col_names <- html %>% html_elements("table:nth-child(12) th") %>% html_text()
 
+bbwaa <- html %>% html_elements("table:nth-child(6) td") %>% html_text()
+veteran <- html %>% html_elements("table:nth-child(12) td") %>% html_text()
 
-stats <- as.data.frame(stats)
-colnames(stats) <- table_col_names
-stats
+# Adjust stats into 4 columns and create data frames
+bbwaa <- matrix(bbwaa, nrow = 5)
+bbwaa <- as.data.frame(t(bbwaa))
+bbwaa <- bbwaa[-c(4)]
+
+veteran <- matrix(veteran, nrow = 4)
+veteran <- as.data.frame(t(veteran))
+
+# Rename the data frames' columns and combine into a single data set
+colnames(bbwaa) <- table_col_names
+colnames(veteran) <- table_col_names
+stats <- rbind(bbwaa, veteran)
+
+# Clean up results column
+stats$`Result` <- factor(stats$`Result`)
+levels(stats$`Result`)
 ```
 
 
