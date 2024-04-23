@@ -1,7 +1,7 @@
 ---
-title: "Progress Report"
-author: "Heike Hofmann"
-date: "2022-11-17"
+title: "Lab 4"
+author: "Luke Richard"
+date: "2024-04-22"
 output: html_document
 ---
 
@@ -60,12 +60,29 @@ hof23 %>% head()
 library(Lahman)
 HallOfFame %>% head()
 
+#remove extra data from data set
 HallOfFame <- HallOfFame[, -3]
 HallOfFame <- HallOfFame[, -7:-9]
 
-joinfame <- left_join(HallOfFame, hof23, by = "playerID")
+# join the two data sets together
+joinfame <- full_join(HallOfFame, hof23)
 
 head(joinfame)
 
-?reorder
+#install.packages('plyr')
+#library(plyr)
+#join_all(list(HallOfFame,hof23), by='playerID', type='left')
 ```
+
+
+
+
+```{r}
+# create plot of the number of inducted and rejected players
+joinfame %>% group_by(yearID) %>% 
+  ggplot(aes(x = yearID, fill = inducted)) +
+  geom_bar()
+  
+
+```
+
