@@ -1,7 +1,7 @@
 ---
-title: "Progress Report"
-author: "Heike Hofmann"
-date: "2022-11-17"
+title: "Lab 4"
+author: "Luke Richard"
+date: "2024-04-22"
 output: html_document
 ---
 
@@ -23,29 +23,66 @@ library(rvest)
 url <- "https://en.wikipedia.org/wiki/2023_Baseball_Hall_of_Fame_balloting"
 html <- read_html(url)
 html
+# data is scraped from weikpedia table
 
 tables <- html %>% html_table(fill=TRUE)
 tables %>% str()
 
-hof23 <- tables[[3]]  # candidates on the BBWAA Ballot
+hof23 <- tables[[3]]
 
 hof23 %>% head()
+# have our data in a data frame and ready to manipulate
 
+# need variables to match for the tables to merge
 hof23 <- hof23 %>% mutate(ballots = 389)
 hof23 <- hof23 %>% mutate(needed = 292)
 hof23 <- hof23 %>% rename(votes = Votes)
-hof23 <- hof23 %>% mutate(yearID = 2023)
+hof23$votes <- as.double(hof23$votes)
+
+hof23 <- mutate(hof23, yearID = 2023)
+hof23$yearID <- as.integer(hof23$yearID)
+
 hof23 <- hof23 %>% rename(playerID = Player)
 
+# create an inducted column
 hof23 <- hof23 %>% mutate(inducted = case_when(votes >= needed ~ 'Y',
   votes < ballots ~ 'N'))
+hof23$inducted <- as.factor(hof23$inducted)
 
+# remove unused variables and reorder
+hof23 <- hof23[, -3:-5]
+hof23 <- hof23[, c(1, 5, 3, 4, 2, 6)]
+
+# check data to make sure it looks good
 hof23 %>% head()
 
+# load Hall of Fame data
 library(Lahman)
 HallOfFame %>% head()
 
-full_join(HallOfFame, hof23, by = "playerID")
+#remove extra data from data set
+HallOfFame <- HallOfFame[, -3]
+HallOfFame <- HallOfFame[, -7:-9]
 
-HallOfFame
+# join the two data sets together
+joinfame <- full_join(HallOfFame, hof23)
+
+head(joinfame)
+
+#install.packages('plyr')
+#library(plyr)
+#join_all(list(HallOfFame,hof23), by='playerID', type='left')
 ```
+
+
+
+
+```{r}
+# create plot of the number of inducted and rejected players
+joinfame %>% group_by(yearID) %>% 
+  ggplot(aes(x = yearID, fill = inducted)) +
+  geom_bar()
+  
+
+```
+
