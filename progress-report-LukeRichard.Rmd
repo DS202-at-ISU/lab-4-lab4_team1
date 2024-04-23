@@ -32,7 +32,9 @@ hof23 <- tables[[3]]
 
 hof23 %>% head()
 # have our data in a data frame and ready to manipulate
+```
 
+```{r}
 # need variables to match for the tables to merge
 hof23 <- hof23 %>% mutate(ballots = 389)
 hof23 <- hof23 %>% mutate(needed = 292)
@@ -56,6 +58,10 @@ hof23 <- hof23[, c(1, 5, 3, 4, 2, 6)]
 # check data to make sure it looks good
 hof23 %>% head()
 
+```
+
+
+```{r}
 # load Hall of Fame data
 library(Lahman)
 HallOfFame %>% head()
