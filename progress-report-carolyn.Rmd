@@ -38,8 +38,13 @@ colnames(veteran) <- table_col_names
 stats <- rbind(bbwaa, veteran)
 
 # Clean up results column
-stats$`Result` <- factor(stats$`Result`)
-levels(stats$`Result`)
+stats$`Result
+` <- factor(stats$`Result
+`) # idk why it keeps doing a new line :(
+levels(stats$`Result
+`) <- c("N", "N", "Y")
+stats
+
 ```
 
 
