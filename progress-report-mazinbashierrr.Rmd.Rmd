@@ -1,0 +1,85 @@
+title: "Progress Report"
+author: "Mazin Bashier"
+date: "2024-4-17"
+output: html_document
+---
+
+
+
+
+
+
+**Scraped data from specified tables on a webpage using rvest.
+Reshaped and prepared the data into structured data frames by transposing and adjusting row/column orientation.
+Renamed columns based on scraped column headers to maintain consistency.
+Combined data frames from different tables to create a comprehensive dataset.
+Cleaned and converted data types for proper analysis and storage.
+Saved the final dataset for future use.
+.***
+```{r}
+library(tidyverse)
+library(rvest)
+library(Lahman)
+
+# Define URL and read the HTML
+url <- "https://en.wikipedia.org/wiki/2023_Baseball_Hall_of_Fame_balloting"
+html <- read_html(url)
+
+# Extract all tables from the page
+tables <- html %>% html_table(fill = TRUE)
+
+# Inspect the structure of the tables
+tables %>% map(head)  # Preview the first few rows of each table
+
+# Assuming the third table is the BBWAA Ballot
+hof23 <- tables[[3]]
+hof23 %>% head()
+
+# Clean and transform data
+# Assuming the third table is the BBWAA Ballot
+hof23 <- tables[[3]]
+
+# Convert all data to character for consistent handling
+hof23 <- hof23 %>% mutate(across(everything(), as.character))
+
+# Clean and transform data
+hof23 <- hof23 %>%
+  mutate(
+    ballots = 389,
+    needed = 292,
+    votes = parse_number(Votes),  # Now parsing numbers from character vector
+    yearID = 2023,
+    playerID = Player,
+    inducted = case_when(
+      votes >= needed ~ 'Y',
+      TRUE ~ 'N'
+    )
+  ) %>%
+  select(playerID, votes, ballots, needed, yearID, inducted)  # Organize and select necessary columns
+
+hof23 %>% head()
+
+
+# Load HallOfFame data for comparison
+data(HallOfFame)
+HallOfFame %>% head()
+
+# Perform a full join based on 'playerID'
+final_dataset <- full_join(HallOfFame, hof23, by = "playerID")
+
+# Review the final dataset
+final_dataset %>% head()
+
+# Save the dataset
+write_csv(final_dataset, "final_hof_dataset.csv")
+
+
+
+```
+
+
+```{r}
+library(Lahman)
+head(HallOfFame)
+```
+
